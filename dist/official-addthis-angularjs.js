@@ -1415,6 +1415,14 @@ var addthisModule = (function (window, angular) {
               $scope.shareCallback({ event: evt.data });
             }
 
+            // ugly ugly hack to make removeEventListener work
+            addthis.removeEventListener = function (event, fn) {
+              var callbacks = this.ed.getQueue(event);
+              var index = index = callbacks.indexOf(fn);
+              if (index > -1) {
+                callbacks.splice(index, 1);
+              }
+            };
             addthis.addEventListener('addthis.menu.share', shareHandler);
             $scope.$on('$destroy', function () {
               addthis.removeEventListener('addthis.menu.share', shareHandler);
